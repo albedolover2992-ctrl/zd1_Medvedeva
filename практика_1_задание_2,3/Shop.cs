@@ -1,42 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace практика_1_задание_2
-{
-    class Shop
+﻿    class Shop
     {
-        private static Dictionary<Product, int> products; // Список продуктов
-        public static decimal profit;  // Прибыль
+        private decimal gain;
+        public Dictionary<Product, int> products;
 
-        public Shop()
+        public decimal Gain
+        {
+            get { return gain; }
+            set { gain = value; }
+        }
+
+
+        public Shop() // конструктор магазина, создающий словарь
         {
             products = new Dictionary<Product, int>();
-            profit = 0;
+
         }
 
-        public static string WriteAllProducts()  // Вывести данные о всех продуктах
+        public void AddProduct(Product product, int count) // метод, добавляющий продукт и его кол-во в словарь
         {
-            string info = "Лист товаров пуст";
-            if (products.Count != 0)
-            {
-                info = "";
-                foreach (KeyValuePair<Product, int> pair in products)
-                {
-                    info += $"Наименование: {pair.Key}, Кол-во товаров: {pair.Value}\n";
-                }
-            }
-            return info;
+            products.Add(product, count);
         }
 
-        public static void CreateProduct(string name, decimal price, int count)  // Создание продукта и добавление его в словарь
+        public Product CreateProduct(string name, decimal price, int count)  // метод, создающий и добавляющий продукт и его кол-во в словарь
         {
-            products.Add(new Product(name, price), count);
+            return new Product(name, price, count);
         }
 
-        public static void Sell(Product product)  // Продажа продукта
+        public void Sell(Product product) // метод, продающий одну единицу продукта
         {
             if (products.ContainsKey(product))
             {
@@ -46,39 +36,53 @@ namespace практика_1_задание_2
                 }
                 else
                 {
+                    gain += product.Price;
                     products[product]--;
-                    profit += products[product];
+                    product.Count--;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Товар не найден!");
             }
         }
 
-        public static Product FindByName(string name)  // Поиск товара
+        public void Sell(string productName) // перегрузка метода Sell, которая находит и продает одну единицу продукта
         {
-            foreach (var product in products.Keys)
+            Product ToSell = FindByName(productName);
+            if (ToSell != null)
             {
-                if (product.Name == name)
+                this.Sell(ToSell);
+            }
+        }
+
+        public Product FindByName(string name) // метод, который находит продукт по его названию
+        {
+            foreach (var item in products.Keys)
+            {
+                if (item.Name == name)
                 {
-                    return product;
+                    return item;
                 }
             }
             return null;
         }
 
-        public static void Sell(string ProductName)  // Перегрузка метода
+        public List<Product> FindMultipleByName(string name) // метод, который находит продукты по названию и вставляет их в список, который позже возвращает
         {
-            Product ToSell = Shop.FindByName(ProductName);
-            if (ToSell != null)
+            List<Product> items = new List<Product>();
+            foreach (var item in products.Keys)
             {
-                Shop.Sell(ToSell);
+                if (item.Name == name)
+                {
+                    items.Add(item);
+
+                }
             }
-            else
-            {
-                Console.WriteLine("Товар не найден!");
-            }
+            return items;
+        }
+
+        public bool FindCopy (Product product)
+        {
+            bool found = false;
+            if(products.ContainsKey(product)) { found = true; }
+            return found;
         }
     }
 }
