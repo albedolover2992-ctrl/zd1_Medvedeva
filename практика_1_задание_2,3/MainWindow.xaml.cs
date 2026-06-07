@@ -17,70 +17,130 @@ namespace практика_1_задание_2
 {
     public partial class MainWindow : Window
     {
-
-        //
-        bool open_or_close = false;  // Открыт/закрыт список товаров
+        Shop shop;
         public MainWindow()
         {
             InitializeComponent();
-            Shop shop = new Shop();
+            shop = new Shop();
+
+        }
+        private void Update() // Обновляет Grid.
+        {
+            Grid.Items.Clear();
+            foreach (var item in shop.products.Keys)
+            {
+                if (item.Count != 0)
+                {
+                    Grid.Items.Add(item);
+                }
+            }
+            profit_label.Content = $"Прибыль: {shop.Gain}";
         }
 
-        private void Product_list_Click(object sender, RoutedEventArgs e)  // Отображение листа с товарами
+        private void Add_Click(object sender, RoutedEventArgs e) // Кнопка Добавить. Добавляет в Grid новый продукт.
         {
-            if(open_or_close == false)
+
+            if (!string.IsNullOrWhiteSpace(ProductName.Text))
             {
-                list_products.Visibility = Visibility.Visible;
-                open_or_close = true;
+                if (decimal.TryParse(ProductPrice.Text, out decimal price))
+                {
+                    if (price > 0)
+                    {
+                        if (int.TryParse(ProductCount.Text, out int amount))
+                        {
+                            if (amount > 0)
+                            {
+                                Product prod = shop.CreateProduct(ProductName.Text, price, amount);
+                                if (shop.FindCopy(prod) == false)
+                                {
+                                    shop.AddProduct(prod, amount);
+                                    Update();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Данный товар уже существует");
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Введено некорректное кол-во");
+                            }
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Введено некорректное кол-во");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Введено некорректная цена");
+                    }
+
+
+                }
+                else
+                {
+                    MessageBox.Show("Введено некорректная цена");
+                }
             }
             else
             {
-                list_products.Visibility = Visibility.Hidden;
-                open_or_close = false;
+                MessageBox.Show("Заполните поле с названием товара");
             }
 
         }
 
-
-        private void Create_Product_Click(object sender, RoutedEventArgs e)  // Открытие элементов отвечающих за добавление товаров
+        private void Task1_Click(object sender, RoutedEventArgs e) // скрывает или показывает панель магазина
         {
-            create_product_panel.Visibility = Visibility.Visible;
-            find_product_panel.Visibility = Visibility.Hidden;
-        }
-
-        private void Find_Prosuct_Click(object sender, RoutedEventArgs e)  // Открытие элементов отвечающих за покупку и поиск товара
-        {
-            create_product_panel.Visibility = Visibility.Hidden;
-            find_product_panel.Visibility = Visibility.Visible;
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)  // Закрытие формы
-        {
-            this.Close();
-        }
-
-        private void Add_Product_Click(object sender, RoutedEventArgs e)  // Добавление товара в лист в зависимости от наполнения строк
-        {
-            if(!string.IsNullOrWhiteSpace(Product.Text))
+            if (Task1_Panel.Visibility == Visibility.Collapsed)
             {
-                if (!string.IsNullOrWhiteSpace(Price.Text))
+                Task1_Panel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Task1_Panel.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        private void Task2_Click(object sender, RoutedEventArgs e) // скрывает или показывает прибыль
+        {
+            if (Task1_Gains_Panel.Visibility == Visibility.Collapsed)
+            {
+                Task1_Gains_Panel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Task1_Gains_Panel.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void Sell_Click(object sender, RoutedEventArgs e) // Кнопка Продать. Продает выбранные продукты и обновляет Grid
+        {
+            foreach (var item in Grid.SelectedItems)
+            {
+                shop.Sell((Product)item);
+            }
+            Update();
+
+        }
+
+        private void Search_Click(object sender, RoutedEventArgs e) // Кнопка Поиск. Очищает Grid, а после добавляет в Grid все найденные элементы shop.products по названию
+        {
+            if (!string.IsNullOrWhiteSpace(ProductName.Text))
+            {
+                Grid.Items.Clear();
+                foreach (var item in shop.FindMultipleByName(ProductName.Text))
                 {
-                    if(!string.IsNullOrWhiteSpace(Count.Text))
-                    {
-                        Shop.CreateProduct(Product.Text, decimal.Parse(Price.Text), int.Parse(Count.Text));
-                        Shop.WriteAllProducts();
-                    }
+                    Grid.Items.Add(item);
                 }
             }
-        }
-
-        private void Find_Click(object sender, RoutedEventArgs e)  // Поиск товара и его покупка
-        {
-            if(!string.IsNullOrWhiteSpace(Product_to_find.Text))
+            else
             {
-                Shop.Sell(Product_to_find.Text);
-                List_products.Text = Shop.WriteAllProducts();
+                MessageBox.Show("Заполните поле с названием товара, чтобы начать поиск");
             }
+
         }
     }
 }
