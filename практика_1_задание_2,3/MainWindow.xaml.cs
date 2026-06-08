@@ -1,123 +1,121 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace практика_1_задание_2
 {
-    public partial class MainWindow : Window
+    class Playlist
     {
-        Shop shop;
-        public MainWindow()
-        {
-            InitializeComponent();
-            shop = new Shop();
-            shop.Gain = 0;
+        private static List<Song> list_of_songs;
+        private int currentIndex;
 
-        }
-        private void Update() // Обновляет Grid.
+        public Playlist()
         {
-            Grid.Items.Clear();
-            foreach (var item in shop.products.Keys)
+            list_of_songs = new List<Song>();
+            currentIndex = 0;
+        }
+
+        public int CurrentIndex { get { return currentIndex; } set { currentIndex = value; } }
+
+        public Song CurrentSong()
+        {
+            if (list_of_songs.Count > 0)
+                return list_of_songs[currentIndex];
+            else
+                throw new IndexOutOfRangeException("Невозможно получить текущую аудиозапись для пустого плейлиста!");
+        }
+
+        public void Clear_list ()  // Очищение плейлиста
+        {
+            list_of_songs.Clear();
+        }
+
+        public void Remove_at_list_by_number ()  // Удаление элемента по индексу
+        {
+            if (list_of_songs.Count > 0)
             {
-                if (item.Count != 0)
-                {
-                    Grid.Items.Add(item);
-                }
+                list_of_songs.RemoveAt(currentIndex);
+                Go_to_first();
             }
-            profit_label.Content = $"Прибыль: {shop.Gain}";
+
         }
 
-        private void Add_Click(object sender, RoutedEventArgs e) // Кнопка Добавить. Добавляет в Grid новый продукт.
+        public void Remove_at_list_by_name (Song song)  // Удаление элемента по имени
         {
+            list_of_songs.Remove(song);
+        }
 
-            if (!string.IsNullOrWhiteSpace(ProductName.Text))
+        public void Go_to_next()  // Переход к следующей песне
+        {
+            if (currentIndex >= list_of_songs.Count - 1)
+                currentIndex = 0;
+            else
+                currentIndex++; 
+        }
+
+        public void Go_to_previous ()  // Переход к предыдущей песне
+        {
+            if (currentIndex == 0)
+                currentIndex = list_of_songs.Count - 1;
+            else
+                currentIndex--;
+        }
+
+        public void Go_to_first ()  // Переход к первой песне
+        {
+            currentIndex = 0;
+        }
+
+        public void Go_to_index (int index)  // Переход к песне по индексу
+        {
+            if (index > list_of_songs.Count - 1 && index < 0)
             {
-                if (decimal.TryParse(ProductPrice.Text, out decimal price))
-                {
-                    if (price > 0)
-                    {
-                        if (int.TryParse(ProductCount.Text, out int amount))
-                        {
-                            if (amount > 0)
-                            {
-                                Product prod = shop.CreateProduct(ProductName.Text, price, amount);
-                                if (shop.FindCopy(prod) == false)
-                                {
-                                    shop.AddProduct(prod, amount);
-                                    Update();
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Данный товар уже существует");
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Введено некорректное кол-во");
-                            }
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("Введено некорректное кол-во");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Введено некорректная цена");
-                    }
-
-
-                }
-                else
-                {
-                    MessageBox.Show("Введено некорректная цена");
-                }
+                throw new IndexOutOfRangeException("Невозможно получить аудиозапись по индексу");
             }
             else
             {
-                MessageBox.Show("Заполните поле с названием товара");
+                currentIndex = index;
+            }
+        }
+
+        public void AddSong(string title, string authorName, string fileName) // создает и добавляет песню в список
+        {
+            if (File.Exists(fileName))
+            {
+                Song song = new Song { Title = title, Author = authorName, Filename = fileName };
+                AddSong(song);
+
             }
 
         }
 
-
-        private void Sell_Click(object sender, RoutedEventArgs e) // Кнопка Продать. Продает выбранные продукты и обновляет Grid
+        public void AddSong(Song song) // добавляет песню в список
         {
-            foreach (var item in Grid.SelectedItems)
-            {
-                shop.Sell((Product)item);
-            }
-            Update();
+            list_of_songs.Add(song);
 
         }
 
-        private void Search_Click(object sender, RoutedEventArgs e) // Кнопка Поиск. Очищает Grid, а после добавляет в Grid все найденные элементы shop.products по названию
+        public List<Song> List  // возвращает список песен
         {
-            if (!string.IsNullOrWhiteSpace(ProductName.Text))
+            get { return list_of_songs; }
+        }
+
+        public bool ContainsByFileName(string filename) // метод, который находит песню по пути к файлу
+        {
+            foreach (var item in list_of_songs)
             {
-                Grid.Items.Clear();
-                foreach (var item in shop.FindMultipleByName(ProductName.Text))
+                if (item.Filename == filename)
                 {
-                    Grid.Items.Add(item);
+                    return true;
                 }
             }
-            else
-            {
-                MessageBox.Show("Заполните поле с названием товара, чтобы начать поиск");
-            }
-
+            return false;
         }
     }
 }
