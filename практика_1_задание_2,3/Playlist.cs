@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace практика_1_задание_2
 {
@@ -18,6 +21,8 @@ namespace практика_1_задание_2
             currentIndex = 0;
         }
 
+        public int CurrentIndex { get { return currentIndex; } set { currentIndex = value; } }
+
         public Song CurrentSong()
         {
             if (list_of_songs.Count > 0)
@@ -26,49 +31,91 @@ namespace практика_1_задание_2
                 throw new IndexOutOfRangeException("Невозможно получить текущую аудиозапись для пустого плейлиста!");
         }
 
-        public static void Clear_list ()  // Очищение плейлиста
+        public void Clear_list ()  // Очищение плейлиста
         {
             list_of_songs.Clear();
         }
 
-        public static void Remove_at_list_by_number (int n)  // Удаление элемента по индексу
+        public void Remove_at_list_by_number ()  // Удаление элемента по индексу
         {
-            list_of_songs.RemoveAt(n);
+            if (list_of_songs.Count > 0)
+            {
+                list_of_songs.RemoveAt(currentIndex);
+                Go_to_first();
+            }
+
         }
 
-        public static void Remove_at_list_by_name (string name)  // Удаление элемента по имени
+        public void Remove_at_list_by_name (Song song)  // Удаление элемента по имени
         {
-
-            //list_of_songs.RemoveAt(num);
+            list_of_songs.Remove(song);
         }
 
-        public static Song Go_to_next(int n)  // Переход к следующей записи 
+        public void Go_to_next()  // Переход к следующей песне
         {
-            if (n < list_of_songs.Count)
-                return list_of_songs[n];
+            if (currentIndex >= list_of_songs.Count - 1)
+                currentIndex = 0;
             else
-                return list_of_songs[n - 1];  // Если введена уже последняя запись, то вернется она же
+                currentIndex++; 
         }
 
-        public static Song Go_to_previous (int n)  // Переход к предыдущей записи
+        public void Go_to_previous ()  // Переход к предыдущей песне
         {
-            if (n > -1)
-                return list_of_songs[n];
+            if (currentIndex == 0)
+                currentIndex = list_of_songs.Count - 1;
             else
-                return list_of_songs[0]; // Если введена уже первая запись, то вернется она же
+                currentIndex--;
         }
 
-        public static Song Go_to_first ()  // Переход к первой записи
+        public void Go_to_first ()  // Переход к первой песне
         {
-            return list_of_songs[0];
+            currentIndex = 0;
         }
 
-        public static Song Go_to_index (int n)  // Переход к записи по индексу
+        public void Go_to_index (int index)  // Переход к песне по индексу
         {
-            if (n > -1 && n < list_of_songs.Count)
-                return list_of_songs[n];
+            if (index > list_of_songs.Count - 1 && index < 0)
+            {
+                throw new IndexOutOfRangeException("Невозможно получить аудиозапись по индексу");
+            }
             else
-                return list_of_songs[0];  // Если индекст невозможен, то вернет первый
+            {
+                currentIndex = index;
+            }
+        }
+
+        public void AddSong(string title, string authorName, string fileName) // создает и добавляет песню в список
+        {
+            if (File.Exists(fileName))
+            {
+                Song song = new Song { Title = title, Author = authorName, Filename = fileName };
+                AddSong(song);
+
+            }
+
+        }
+
+        public void AddSong(Song song) // добавляет песню в список
+        {
+            list_of_songs.Add(song);
+
+        }
+
+        public List<Song> List  // возвращает список песен
+        {
+            get { return list_of_songs; }
+        }
+
+        public bool ContainsByFileName(string filename) // метод, который находит песню по пути к файлу
+        {
+            foreach (var item in list_of_songs)
+            {
+                if (item.Filename == filename)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
