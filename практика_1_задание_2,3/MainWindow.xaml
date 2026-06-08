@@ -27,7 +27,7 @@
             <Button Content="Поиск" FontSize="16" Foreground="White" Click="Search_Click" Background="Aqua" Height="30"/>
         </StackPanel>
 
-        <StackPanel x:Name="Task1_Gains_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,60,232,0" Visibility="Collapsed">
+        <StackPanel x:Name="Task1_Gains_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,60,232,0">
             <Label x:Name="profit_label" Content="Прибыль:" Background="Aqua" FontSize="20" HorizontalAlignment="Center" Foreground="White" Height="40" Width="318"/>
         </StackPanel>
     </Grid>
