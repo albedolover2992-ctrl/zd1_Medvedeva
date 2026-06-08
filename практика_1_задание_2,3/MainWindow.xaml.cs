@@ -22,6 +22,7 @@ namespace практика_1_задание_2
         {
             InitializeComponent();
             shop = new Shop();
+            shop.Gain = 0;
 
         }
         private void Update() // Обновляет Grid.
@@ -91,30 +92,6 @@ namespace практика_1_задание_2
 
         }
 
-        private void Task1_Click(object sender, RoutedEventArgs e) // скрывает или показывает панель магазина
-        {
-            if (Task1_Panel.Visibility == Visibility.Collapsed)
-            {
-                Task1_Panel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                Task1_Panel.Visibility = Visibility.Collapsed;
-            }
-
-        }
-
-        private void Task2_Click(object sender, RoutedEventArgs e) // скрывает или показывает прибыль
-        {
-            if (Task1_Gains_Panel.Visibility == Visibility.Collapsed)
-            {
-                Task1_Gains_Panel.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                Task1_Gains_Panel.Visibility = Visibility.Collapsed;
-            }
-        }
 
         private void Sell_Click(object sender, RoutedEventArgs e) // Кнопка Продать. Продает выбранные продукты и обновляет Grid
         {
