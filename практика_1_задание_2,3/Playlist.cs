@@ -106,7 +106,7 @@ namespace практика_1_задание_2
             get { return list_of_songs; }
         }
 
-        public bool ContainsByFileName(string filename) // метод, который находит песню по пути к файлу
+        public bool ContainsByFileName(string filename) // поиск песни по пути к файлу
         {
             foreach (var item in list_of_songs)
             {
