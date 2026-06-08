@@ -7,12 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="800">
     <Grid Margin="0, 0, 2, 0">
-        <StackPanel HorizontalAlignment="Left" Height="965" VerticalAlignment="Top" Width="1095">
-            <Menu HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="100">
-                <MenuItem Header="Магазин" Click="Task1_Click" Width="100"/>
-                <MenuItem Header="Прибыль" Click="Task2_Click" Width="100"/>
-            </Menu>
-        </StackPanel>
 
         <StackPanel x:Name="Task1_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,100,232,0" Visibility="Visible">
             <Label Content="Магазин" Background="Aqua" FontSize="20" HorizontalAlignment="Center" Foreground="White" Height="40" Width="318"/>
