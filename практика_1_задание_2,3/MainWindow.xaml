@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:практика_1_задание_2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="800">
+        Title="MainWindow" Height="1000" Width="800">
     <Grid Margin="0, 0, 2, 0">
+        <Menu x:Name="Menu" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" Height="50">
+            <MenuItem Header="Магазин" Click="Shop_Click" Width="100"/>
+            <MenuItem Header="Плейлист" Click="Playlist_Click" Width="100"/>
+        </Menu>
 
-        <StackPanel x:Name="Task1_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,100,232,0" Visibility="Visible">
+        <StackPanel x:Name="Task1_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,100,232,0" Visibility="Hidden">
             <Label Content="Магазин" Background="Aqua" FontSize="20" HorizontalAlignment="Center" Foreground="White" Height="40" Width="318"/>
             <TextBox x:Name="ProductName" ToolTip="Название продукта" FontSize="20" Height="30" TextWrapping="Wrap" Background="LightGray"/>
             <TextBox x:Name="ProductPrice" ToolTip="Цена продукта" FontSize="20" Height="30" TextWrapping="Wrap" Background="LightGray"/>
@@ -19,16 +23,36 @@
                     <DataGridTextColumn Header="Цена" Binding="{Binding Price}"/>
                     <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
                 </DataGrid.Columns>
-
             </DataGrid>
-
             <Button Content="Добавить" FontSize="16" Foreground="White" Click="Add_Click" Background="Aqua" Height="30"/>
             <Button Content="Продать" FontSize="16" Foreground="White" Click="Sell_Click" Background="Coral" Height="30"/>
             <Button Content="Поиск" FontSize="16" Foreground="White" Click="Search_Click" Background="Aqua" Height="30"/>
-        </StackPanel>
-
-        <StackPanel x:Name="Task1_Gains_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,60,232,0">
             <Label x:Name="profit_label" Content="Прибыль:" Background="Aqua" FontSize="20" HorizontalAlignment="Center" Foreground="White" Height="40" Width="318"/>
+        </StackPanel>
+        
+        
+        <StackPanel x:Name="Task2_Panel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="242,100,232,0" Visibility="Hidden">
+            <Label Content="Плейлист" Background="Aqua" FontSize="20" HorizontalAlignment="Center" Foreground="White" Height="40" Width="318"/>
+            <TextBox x:Name="SongTitle" ToolTip="Название песни" FontSize="20" Height="30" TextWrapping="Wrap" Background="LightGray"/>
+            <TextBox x:Name="AuthorName" ToolTip="Имя автора" FontSize="20" Height="30" TextWrapping="Wrap" Background="LightGray"/>
+            <TextBox x:Name="FileName" ToolTip="Путь к файлу" FontSize="20" Height="30" TextWrapping="Wrap" Background="LightGray"/>
+            <TextBox x:Name="Index_TextBox" ToolTip="Индекс" FontSize="20" Height="30" TextWrapping="Wrap" Background="LightGray"/>
+            <DataGrid x:Name="Grid_Playlist" AutoGenerateColumns="False" SelectionMode="Single" ToolTip="Список" FontSize="20" Height="418" Background="LightGray" IsReadOnly="True" Width="316" RenderTransformOrigin="0.5,0.5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+                    <DataGridTextColumn Header="Author" Binding="{Binding Author}"/>
+                    <DataGridTextColumn Header="FileName" Binding="{Binding Filename}"/>
+                </DataGrid.Columns>
+
+            </DataGrid>
+            <Button Content="Добавить" FontSize="16" Foreground="White" Click="Add_song_Click" Background="Aqua" Height="30"/>
+            <Button Content="Удалить" FontSize="16" Foreground="White" Click="Delete_Song_Click" Background="Coral" Height="30"/>
+            <Button Content="Очистить" FontSize="16" Foreground="White" Click="Clear_Playlist_Click" Background="Coral" Height="30"/>
+            <Button Content="Поиск" FontSize="16" Foreground="White" Click="Search_Click" Background="Aqua" Height="30"/>
+            <Button Content="Вернуться к началу" FontSize="16" Foreground="White" Click="Return_Click" Background="Aqua" Height="30"/>
+            <Button Content="Следующая песня" FontSize="16" Foreground="White" Click="Next_Click" Background="Aqua" Height="30"/>
+            <Button Content="Предыдущая песня" FontSize="16" Foreground="White" Click="Previous_Click" Background="Aqua" Height="30"/>
         </StackPanel>
     </Grid>
 </Window>
+
